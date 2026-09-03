@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: cybersecurity-ai-agent-backend
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres-db
+      REDIS_HOST: redis-cache
+      COSMOS_ENDPOINT: http://cosmos-emulator:8081
+      DATABASE_URL: postgresql://postgres:postgres@postgres-db:5432/cybersecurity_db
+    ports:
+      - "8000:8000"
+    networks:
+      - cybersecurity-network
+
+networks:
+  cybersecurity-network:
+    external: true
+    name: cybersecurity-network
