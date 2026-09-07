@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - 'main' # Syncs all branches
-  tags:
-    - '**' # Syncs all tags
 
 jobs:
   sync:
