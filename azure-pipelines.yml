@@ -1,0 +1,240 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+
+  # Azure
+  azureServiceConnection: 'cyber-resource-connection'
+  acrServiceConnection: 'acr-cyber-connection'
+
+  resourceGroup: 'rg-cybersecurity-dev'
+  aksCluster: 'aks-cybersecurity-dev'
+
+  # ACR
+  containerRegistry: 'cybersecurityacr7vhgp.azurecr.io'
+
+  # Backend
+  backendRepository: 'cybersecurity-ai-agent-backend'
+  backendDockerfile: 'docker/backend.Dockerfile'
+
+  # Frontend
+  frontendRepository: 'cybersecurity-ai-agent-frontend'
+  frontendDockerfile: 'docker/frontend.Dockerfile'
+
+  # Image tag
+  imageTag: '$(Build.BuildId)'
+
+
+stages:
+
+# ============================================================
+# STAGE 1 - BUILD AND PUSH DOCKER IMAGES
+# ============================================================
+
+- stage: BuildAndPush
+  displayName: 'Build and Push Docker Images'
+
+  jobs:
+
+  - job: DockerBuild
+    displayName: 'Build Backend and Frontend'
+
+    steps:
+
+    # --------------------------------------------------------
+    # Check repository structure
+    # --------------------------------------------------------
+
+    - script: |
+        echo "======================================"
+        echo "Repository"
+        echo "======================================"
+
+        pwd
+
+        echo "======================================"
+        echo "Files"
+        echo "======================================"
+
+        find $(Build.SourcesDirectory) -maxdepth 4 -type f | sort
+
+        echo "======================================"
+        echo "Frontend"
+        echo "======================================"
+
+        find $(Build.SourcesDirectory)/frontend -maxdepth 3 -type f | sort
+
+      displayName: 'Check Repository Structure'
+
+
+    # --------------------------------------------------------
+    # BACKEND IMAGE
+    # --------------------------------------------------------
+
+    - task: Docker@2
+      displayName: 'Build and Push Backend Image'
+
+      inputs:
+        command: buildAndPush
+
+        containerRegistry: '$(acrServiceConnection)'
+
+        repository: '$(backendRepository)'
+
+        dockerfile: '$(backendDockerfile)'
+
+        # Backend context = repository root
+        buildContext: '$(Build.SourcesDirectory)'
+
+        tags: |
+          $(imageTag)
+          latest
+
+
+    # --------------------------------------------------------
+    # FRONTEND IMAGE
+    # --------------------------------------------------------
+
+    - task: Docker@2
+      displayName: 'Build and Push Frontend Image'
+
+      inputs:
+        command: buildAndPush
+
+        containerRegistry: '$(acrServiceConnection)'
+
+        repository: '$(frontendRepository)'
+
+        dockerfile: '$(frontendDockerfile)'
+
+        # IMPORTANT:
+        # Frontend context = frontend folder
+        buildContext: '$(Build.SourcesDirectory)/frontend'
+
+        tags: |
+          $(imageTag)
+          latest
+
+
+# ============================================================
+# STAGE 2 - DEPLOY TO AKS
+# ============================================================
+
+- stage: Deploy
+  displayName: 'Deploy to AKS'
+
+  dependsOn: BuildAndPush
+
+  condition: succeeded()
+
+  jobs:
+
+  - job: DeployToAKS
+
+    displayName: 'Deploy Backend and Frontend to AKS'
+
+    steps:
+
+    # --------------------------------------------------------
+    # CONNECT TO AKS
+    # --------------------------------------------------------
+
+    - task: AzureCLI@2
+      displayName: 'Connect to AKS'
+
+      inputs:
+        azureSubscription: '$(azureServiceConnection)'
+
+        scriptType: bash
+
+        scriptLocation: inlineScript
+
+        inlineScript: |
+
+          az aks get-credentials \
+            --resource-group $(resourceGroup) \
+            --name $(aksCluster) \
+            --overwrite-existing
+
+          kubectl get nodes
+
+
+    # --------------------------------------------------------
+    # UPDATE BACKEND IMAGE TAG
+    # --------------------------------------------------------
+
+    - script: |
+
+        sed -i \
+          "s|BACKEND_IMAGE_TAG|$(imageTag)|g" \
+          k8s/deployment.yaml
+
+      displayName: 'Update Backend Image Tag'
+
+
+    # --------------------------------------------------------
+    # UPDATE FRONTEND IMAGE TAG
+    # --------------------------------------------------------
+
+    - script: |
+
+        sed -i \
+          "s|FRONTEND_IMAGE_TAG|$(imageTag)|g" \
+          k8s/frontend-deployment.yaml
+
+      displayName: 'Update Frontend Image Tag'
+
+
+    # --------------------------------------------------------
+    # DEPLOY BACKEND
+    # --------------------------------------------------------
+
+    - task: AzureCLI@2
+      displayName: 'Deploy Backend to AKS'
+
+      inputs:
+
+        azureSubscription: '$(azureServiceConnection)'
+
+        scriptType: bash
+
+        scriptLocation: inlineScript
+
+        inlineScript: |
+
+          echo "Deploying Backend..."
+
+          kubectl apply -f k8s/serviceaccount.yaml
+
+          kubectl apply -f k8s/secret-provider-class.yaml
+
+          kubectl apply -f k8s/deployment.yaml
+
+          kubectl apply -f k8s/service.yaml
+
+
+    # --------------------------------------------------------
+    # DEPLOY FRONTEND
+    # --------------------------------------------------------
+
+    - task: AzureCLI@2
+      displayName: 'Deploy Frontend to AKS'
+
+      inputs:
+
+        azureSubscription: '$(azureServiceConnection)'
+
+        scriptType: bash
+
+        scriptLocation: inlineScript
+
+        inlineScript: |
+
+          echo "Deploying Frontend..."
+
+          kubectl apply -f k8s/frontend-deployment.yaml
+
+          kubectl apply -f k8s/frontend-service.yaml

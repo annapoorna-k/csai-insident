@@ -702,11 +702,6 @@ function Dashboard({
     setRunResult,
   ] = useState(null);
 
-  const [
-  investigationResults,
-  setInvestigationResults,
-] = useState({});
-
 
   const [
     runError,
@@ -1405,18 +1400,6 @@ function Dashboard({
         result
       );
 
-      setInvestigationResults(
-        (previous) => ({
-          ...previous,
-          [result?.investigation_id]: {
-          rawOutput: result,
-          incident: incidentText,
-          logs: logsText,
-          indicators: indicatorsText,
-        },
-      })
-    );
-
 
       setRunStatus(
         "Completed"
@@ -1448,44 +1431,8 @@ function Dashboard({
 
 
   function openReport(item) {
-  const investigationId =
-    item?.investigation_id ??
-    item?.id ??
-    getIncidentId(item);
-
-  const rawOutput = {
-    investigation_id: investigationId,
-    status: item?.status ?? "COMPLETED",
-    risk_assessment: item?.risk_assessment ?? {
-      risk_level: item?.risk_level ?? null,
-      risk_score: item?.risk_score ?? null,
-    },
-  };
-
-  setReportItem({
-    ...item,
-
-    reportRawOutput: rawOutput,
-
-    reportIncident:
-      item?.incident ??
-      item?.description ??
-      item?.title ??
-      "",
-
-    reportLogs:
-      item?.logs ??
-      item?.security_logs ??
-      item?.log_data ??
-      "",
-
-    reportIndicators:
-      item?.indicators ??
-      item?.iocs ??
-      item?.threat_indicators ??
-      "",
-  });
-}
+    setReportItem(item);
+  }
 
 
   /* ==========================================================
@@ -3873,84 +3820,40 @@ function InvestigationResult({
    ============================================================ */
 
 function ReportModal({ item, severity: resolvedSeverity, onClose }) {
-  const rawOutput = item?.reportRawOutput;
-
-  const logs =
-    item?.reportLogs ??
-    item?.logs ??
-    item?.security_logs ??
-    item?.log_data ??
-    "";
-
-  const indicators =
-    item?.reportIndicators ??
-    item?.indicators ??
-    item?.iocs ??
-    item?.threat_indicators ??
-    "";
-
-  const incident =
-    item?.reportIncident ??
-    item?.incident ??
-    item?.description ??
-    item?.title ??
-    "";
+  const outputData =
+    item?.output ??
+    item?.outputs ??
+    item?.investigation_output ??
+    item?.output_data ??
+    item?.raw_output ??
+    item?.rawOutput ??
+    item?.result ??
+    item?.investigation_result ??
+    item?.response ??
+    item?.response_data ??
+    null;
 
   const severity =
     resolvedSeverity ??
-    item?.risk_level ??
     item?.severity ??
     item?.triage_result?.severity ??
     item?.triage?.severity ??
     item?.risk_assessment?.severity ??
     "UNKNOWN";
 
-  const riskScore =
-    rawOutput?.risk_assessment?.risk_score ??
-    rawOutput?.risk_score ??
-    item?.risk_score ??
-    item?.risk_assessment?.risk_score ??
-    "N/A";
-
-  const formatReportValue = (value) => {
-    if (
-      value === null ||
-      value === undefined ||
-      value === ""
-    ) {
-      return "N/A";
-    }
-
-    if (typeof value === "string") {
-      return value;
-    }
-
-    return JSON.stringify(value, null, 2);
-  };
-
   return (
     <div
       className="modal-overlay"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          onClose();
-        }
+        if (event.target === event.currentTarget) onClose();
       }}
     >
       <div className="cases-modal report-modal">
-
-        {/* HEADER */}
         <div className="report-modal-header">
           <div>
             <span>INVESTIGATION REPORT</span>
-
-            <h2>
-              Investigation Report
-            </h2>
-
-            <p>
-              PostgreSQL investigation record
-            </p>
+            <h2>Investigation Report</h2>
+            <p>PostgreSQL investigation record</p>
           </div>
 
           <button
@@ -3963,108 +3866,42 @@ function ReportModal({ item, severity: resolvedSeverity, onClose }) {
           </button>
         </div>
 
-        {/* REPORT CONTENT */}
         <div className="report-modal-content">
 
-          {/* 1. INCIDENT ID */}
           <div className="report-detail-row">
-            <span>
-              INCIDENT ID
-            </span>
+            <span>STATUS</span>
+            <strong>
+              {formatStatus(item?.status || "COMPLETED")}
+            </strong>
+          </div>
 
+          <div className="report-detail-row">
+            <span>INCIDENT ID</span>
             <strong className="report-mono">
               {getIncidentId(item)}
             </strong>
           </div>
 
-          {/* 2. INCIDENT */}
           <div className="report-detail-row report-incident-row">
-            <span>
-              INCIDENT
-            </span>
-
+            <span>INCIDENT</span>
             <strong>
-              {formatReportValue(incident)}
+              {getIncidentName(item)}
             </strong>
           </div>
 
-          {/* 3. LOGS */}
-          <div className="report-detail-row report-content-row">
-            <span>
-              LOGS
-            </span>
-
-            <pre className="report-field-output">
-              {formatReportValue(logs)}
-            </pre>
-          </div>
-
-          {/* 4. INDICATORS */}
-          <div className="report-detail-row report-content-row">
-            <span>
-              INDICATORS
-            </span>
-
-            <pre className="report-field-output">
-              {formatReportValue(indicators)}
-            </pre>
-          </div>
-
-          {/* 5. STATUS */}
           <div className="report-detail-row">
-            <span>
-              STATUS
-            </span>
-
-            <strong>
-              {formatStatus(
-                rawOutput?.status ??
-                item?.status ??
-                "COMPLETED"
-              )}
-            </strong>
-          </div>
-
-          {/* 6. SEVERITY */}
-          <div className="report-detail-row">
-            <span>
-              SEVERITY
-            </span>
-
-            <strong
-              className={`severity-badge ${String(
-                severity
-              ).toLowerCase()}`}
-            >
+            <span>SEVERITY</span>
+            <strong className={`severity-badge ${String(severity).toLowerCase()}`}>
               {severity}
             </strong>
           </div>
 
-          {/* 7. RISK SCORE */}
-          <div className="report-detail-row">
-            <span>
-              RISK SCORE
-            </span>
-
-            <strong className="report-risk-score">
-              {riskScore}
-            </strong>
-          </div>
-
-          {/* 8. EXACT RAW OUTPUT */}
           <div className="report-raw-output">
-            <span>
-              RAW OUTPUT
-            </span>
-
+            <span>RAW OUTPUT</span>
             <pre>
-              {rawOutput
-                ? JSON.stringify(
-                    rawOutput,
-                    null,
-                    2
-                  )
-                : "Raw investigation output is not available for this investigation."}
+              {outputData !== null
+                ? JSON.stringify(outputData, null, 2)
+                : JSON.stringify(item, null, 2)}
             </pre>
           </div>
 
@@ -4073,6 +3910,7 @@ function ReportModal({ item, severity: resolvedSeverity, onClose }) {
     </div>
   );
 }
+
 /* ============================================================
    HEALTH ROW
    ============================================================ */

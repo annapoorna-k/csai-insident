@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: cybersecurity-backend
+  namespace: default
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: cybersecurity-backend
+
+  template:
+    metadata:
+      labels:
+        app: cybersecurity-backend
+        azure.workload.identity/use: "true"
+
+    spec:
+      serviceAccountName: cybersecurity-backend-sa
+
+      containers:
+        - name: cybersecurity-backend
+
+          image: cybersecurityacr7vhgp.azurecr.io/cybersecurity-ai-agent-backend:BACKEND_IMAGE_TAG
+
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8000
+
+          env:
+
+            # PostgreSQL
+            - name: POSTGRES_HOST
+              value: "cybersecurity-psql-dev-7vhgp.postgres.database.azure.com"
+
+            - name: POSTGRES_PORT
+              value: "5432"
+
+            - name: POSTGRES_DB
+              value: "cybersecuritydb"
+
+            - name: POSTGRES_USER
+              value: "cyberadmin"
+
+            # Cosmos DB
+            - name: COSMOS_ENDPOINT
+              value: "https://cybersecurity-cosmos-dev-7vhgp.documents.azure.com:443/"
+
+            - name: COSMOS_DATABASE_NAME
+              value: "cybersecurity"
+
+            - name: COSMOS_CONTAINER_NAME
+              value: "investigations"
+
+            # Langfuse
+            - name: LANGFUSE_BASE_URL
+              value: "https://us.cloud.langfuse.com"
+
+            # OpenRouter
+            - name: OPENROUTER_BASE_URL
+              value: "https://openrouter.ai/api/v1"
+
+            - name: DEFAULT_MODEL
+              value: "openrouter/free"
+
+            # Secrets from Key Vault
+            - name: LANGFUSE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cybersecurity-secrets
+                  key: LANGFUSE_SECRET_KEY
+
+            - name: LANGFUSE_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cybersecurity-secrets
+                  key: LANGFUSE_PUBLIC_KEY
+
+            - name: OPENROUTER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cybersecurity-secrets
+                  key: OPENROUTER_API_KEY
+
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cybersecurity-secrets
+                  key: DATABASE_URL
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cybersecurity-secrets
+                  key: POSTGRES_PASSWORD
+
+            - name: COSMOS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cybersecurity-secrets
+                  key: COSMOS_KEY
+
+          # Required for Key Vault CSI
+          volumeMounts:
+            - name: secrets-store
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+
+          # FastAPI health check
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+
+      # Key Vault CSI volume
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+
+            volumeAttributes:
+              secretProviderClass: cybersecurity-keyvault

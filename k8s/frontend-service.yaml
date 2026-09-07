@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: cybersecurity-frontend
+  namespace: default
+
+spec:
+  type: LoadBalancer
+
+  selector:
+    app: cybersecurity-frontend
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cybersecurity-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cybersecurity-frontend
+  template:
+    metadata:
+      labels:
+        app: cybersecurity-frontend
+    spec:
+      containers:
+        - name: cybersecurity-frontend
+          image: cybersecurityacr7vhgp.azurecr.io/cybersecurity-ai-agent-frontend:FRONTEND_IMAGE_TAG
+          ports:
+            - containerPort: 80

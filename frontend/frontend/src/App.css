@@ -783,6 +783,7 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 
   gap: 20px;
 
@@ -902,7 +903,63 @@ button:disabled {
 
 
 .manual-body {
-  padding: 22px;
+  padding: 10px;
+}
+
+/* Scroll controls for the Cosmos DB investigation panel */
+.manual-scroll-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.manual-scroll-button {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 9px;
+  border: 1px solid #cfdde8;
+  border-radius: 7px;
+  color: #1769aa;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.manual-scroll-button:hover {
+  background: #f2f8fc;
+  border-color: #9fc2d9;
+}
+
+.manual-scroll-container {
+  max-height: 650px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #b9c9d7 #f1f5f8;
+}
+
+.manual-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.manual-scroll-container::-webkit-scrollbar-track {
+  background: #f1f5f8;
+  border-radius: 8px;
+}
+
+.manual-scroll-container::-webkit-scrollbar-thumb {
+  background: #b9c9d7;
+  border-radius: 8px;
+}
+
+.manual-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #8fa8ba;
 }
 
 
@@ -1524,7 +1581,7 @@ button:disabled {
   display: grid;
 
   grid-template-columns:
-    repeat(4, 1fr);
+    repeat(3, 1fr);
 
   gap: 14px;
 
@@ -3432,4 +3489,926 @@ button:disabled {
       0 15px 15px;
   }
 
+}
+
+/* ============================================================
+   DASHBOARD COMPACT VIEW
+   Dimension-only adjustments — design/colors unchanged
+   ============================================================ */
+
+.page-content {
+  padding: 18px 24px 24px;
+}
+
+.page-header {
+  margin-bottom: 12px;
+}
+
+.page-header h1 {
+  font-size: 24px;
+}
+
+.page-header p {
+  margin-top: 5px;
+  line-height: 1.35;
+}
+
+.dashboard-card {
+  margin-bottom: 10px;
+}
+
+.card-header {
+  min-height: 54px;
+  padding: 10px 14px;
+}
+
+.card-header h2 {
+  font-size: 13px;
+}
+
+.card-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* 4 metric cards */
+.metric-grid {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.metric-card {
+  min-height: 76px;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.metric-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+}
+
+.metric-content strong {
+  margin-top: 2px;
+  font-size: 20px;
+}
+
+.metric-content small {
+  margin-top: 2px;
+}
+
+/* Incidents Worked Per Day */
+.daily-chart-card {
+  min-height: 215px;
+}
+
+.chart-subtitle {
+  padding: 7px 14px 0;
+}
+
+.vertical-chart {
+  height: 150px;
+  padding: 8px 14px 12px;
+}
+
+.vertical-bars {
+  gap: 7px;
+}
+
+.vertical-bar-track {
+  height: 105px;
+  max-width: 38px;
+}
+
+.vertical-bar-column {
+  max-width: 60px;
+}
+
+/* Risk Distribution */
+.risk-chart-card {
+  min-height: 215px;
+}
+
+.pie-layout {
+  min-height: 160px;
+  gap: 12px;
+  padding: 10px 14px;
+}
+
+.pie-wrapper,
+.pie-chart {
+  width: 125px;
+  height: 125px;
+}
+
+.pie-total {
+  width: 62px;
+  height: 62px;
+}
+
+.pie-total strong {
+  font-size: 18px;
+}
+
+.pie-legend {
+  gap: 6px;
+}
+
+.pie-legend-row {
+  gap: 8px;
+  padding: 5px 0;
+}
+
+.pie-legend-row strong {
+  font-size: 11px;
+}
+
+/* Investigate Cosmos DB Incident */
+.manual-header {
+  min-height: 70px;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.manual-title-area {
+  gap: 10px;
+}
+
+.manual-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+}
+
+.manual-title-area h2 {
+  font-size: 14px;
+}
+
+.manual-title-area p {
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+.manual-body {
+  padding: 12px 14px;
+}
+
+.search-select-row {
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 8px;
+}
+
+.search-field,
+.select-incident-button {
+  height: 38px;
+}
+
+.selected-incident-panel {
+  margin-top: 9px;
+  padding: 10px;
+}
+
+.selected-description {
+  margin-top: 7px;
+  line-height: 1.35;
+}
+
+.selected-meta {
+  gap: 7px;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.input-grid {
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.input-panel-header {
+  min-height: 40px;
+  padding: 7px 10px;
+}
+
+.input-panel textarea {
+  min-height: 82px;
+  height: 82px;
+  padding: 9px;
+}
+
+.manual-action-row {
+  gap: 10px;
+  margin-top: 9px;
+  padding-top: 9px;
+}
+
+.run-investigation-button {
+  min-width: 155px;
+  height: 36px;
+}
+
+/* Completed Investigations */
+.completed-table-wrapper {
+  max-height: 235px;
+  overflow-y: auto;
+}
+
+.completed-table th {
+  padding: 7px 10px;
+}
+
+.completed-table td {
+  padding: 8px 10px;
+}
+
+.pagination-bar {
+  min-height: 48px;
+  padding: 8px 12px;
+}
+
+/* Keep the whole dashboard inside the viewport on shorter screens */
+@media (max-height: 850px) {
+  .page-content {
+    padding: 12px 18px 16px;
+  }
+
+  .page-header {
+    margin-bottom: 8px;
+  }
+
+  .page-header h1 {
+    font-size: 21px;
+  }
+
+  .metric-card {
+    min-height: 64px;
+    padding: 8px 10px;
+  }
+
+  .metric-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .metric-content strong {
+    font-size: 18px;
+  }
+
+  .daily-chart-card,
+  .risk-chart-card {
+    min-height: 185px;
+  }
+
+  .vertical-chart {
+    height: 125px;
+  }
+
+  .vertical-bar-track {
+    height: 85px;
+  }
+
+  .pie-layout {
+    min-height: 130px;
+    padding: 7px 10px;
+  }
+
+  .pie-wrapper,
+  .pie-chart {
+    width: 105px;
+    height: 105px;
+  }
+
+  .pie-total {
+    width: 52px;
+    height: 52px;
+  }
+
+  .manual-header {
+    min-height: 58px;
+    padding: 9px 12px;
+  }
+
+  .manual-body {
+    padding: 9px 12px;
+  }
+
+  .selected-incident-panel {
+    padding: 8px;
+  }
+
+  .input-panel textarea {
+    min-height: 65px;
+    height: 65px;
+  }
+
+  .manual-action-row {
+    margin-top: 7px;
+    padding-top: 7px;
+  }
+
+  .completed-table-wrapper {
+    max-height: 185px;
+  }
+}
+
+@media (max-height: 760px) {
+  .topbar {
+    min-height: 62px;
+  }
+
+  .page-content {
+    padding: 8px 14px 10px;
+  }
+
+  .page-header {
+    margin-bottom: 6px;
+  }
+
+  .page-header h1 {
+    font-size: 19px;
+  }
+
+  .page-header p {
+    display: none;
+  }
+
+  .metric-grid {
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+
+  .metric-card {
+    min-height: 55px;
+    padding: 6px 8px;
+  }
+
+  .metric-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .metric-content strong {
+    font-size: 16px;
+  }
+
+  .metric-content small {
+    display: none;
+  }
+
+  .daily-chart-card,
+  .risk-chart-card {
+    min-height: 155px;
+  }
+
+  .card-header {
+    min-height: 43px;
+    padding: 7px 10px;
+  }
+
+  .vertical-chart {
+    height: 102px;
+    padding: 5px 10px 8px;
+  }
+
+  .vertical-bar-track {
+    height: 65px;
+  }
+
+  .pie-layout {
+    min-height: 105px;
+    padding: 4px 8px;
+  }
+
+  .pie-wrapper,
+  .pie-chart {
+    width: 82px;
+    height: 82px;
+  }
+
+  .pie-total {
+    width: 42px;
+    height: 42px;
+  }
+
+  .pie-total strong {
+    font-size: 14px;
+  }
+
+  .pie-legend {
+    gap: 2px;
+  }
+
+  .pie-legend-row {
+    padding: 3px 0;
+  }
+
+  .manual-header {
+    min-height: 50px;
+    padding: 7px 10px;
+  }
+
+  .manual-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .manual-title-area h2 {
+    font-size: 12px;
+  }
+
+  .manual-title-area p {
+    display: none;
+  }
+
+  .manual-body {
+    padding: 7px 10px;
+  }
+
+  .search-field,
+  .select-incident-button {
+    height: 32px;
+  }
+
+  .selected-incident-panel {
+    margin-top: 6px;
+    padding: 6px;
+  }
+
+  .selected-description {
+    margin-top: 4px;
+    font-size: 10px;
+  }
+
+  .selected-meta {
+    margin-top: 5px;
+    padding-top: 5px;
+  }
+
+  .input-grid {
+    margin-top: 6px;
+  }
+
+  .input-panel-header {
+    min-height: 32px;
+    padding: 5px 7px;
+  }
+
+  .input-panel textarea {
+    min-height: 48px;
+    height: 48px;
+    padding: 6px;
+  }
+
+  .manual-action-row {
+    margin-top: 5px;
+    padding-top: 5px;
+  }
+
+  .run-investigation-button {
+    min-width: 135px;
+    height: 31px;
+  }
+
+  .completed-table-wrapper {
+    max-height: 125px;
+  }
+
+  .completed-table th,
+  .completed-table td {
+    padding: 5px 7px;
+  }
+
+  .pagination-bar {
+    min-height: 38px;
+    padding: 5px 8px;
+  }
+}
+
+
+/* ============================================================
+   DASHBOARD LOWER SECTION - SIZE ONLY
+   Keeps the existing visual design unchanged.
+   ============================================================ */
+
+/* Make both lower cards the same height and let the
+   Completed Investigations card receive more horizontal space. */
+ .dashboard-lower-grid {
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.68fr) !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+}
+
+.manual-investigation-card,
+.completed-card {
+  height: 480px !important;
+  min-height: 480px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Compact the investigation card without changing its design. */
+.manual-header {
+  min-height: 62px !important;
+  padding: 9px 12px !important;
+  gap: 10px !important;
+}
+
+.manual-title-area {
+  gap: 9px !important;
+}
+
+.manual-icon {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.manual-title-area h2 {
+  font-size: 14px !important;
+}
+
+.manual-title-area p {
+  margin-top: 3px !important;
+  font-size: 9px !important;
+  line-height: 1.3 !important;
+}
+
+.manual-body {
+  padding: 9px 12px !important;
+}
+
+.search-select-row {
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 6px !important;
+}
+
+.search-field,
+.select-incident-button {
+  height: 34px !important;
+}
+
+.selected-incident-panel {
+  margin-top: 7px !important;
+  padding: 8px !important;
+}
+
+.selected-description {
+  margin-top: 6px !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
+}
+
+.selected-meta {
+  gap: 6px !important;
+  margin-top: 7px !important;
+  padding-top: 7px !important;
+}
+
+.input-grid {
+  gap: 7px !important;
+  margin-top: 7px !important;
+}
+
+.input-panel-header {
+  min-height: 34px !important;
+  padding: 6px 8px !important;
+}
+
+.input-panel textarea {
+  min-height: 55px !important;
+  height: 55px !important;
+  padding: 7px !important;
+}
+
+.manual-action-row {
+  gap: 8px !important;
+  margin-top: 7px !important;
+  padding-top: 7px !important;
+}
+
+.run-investigation-button {
+  min-width: 135px !important;
+  height: 32px !important;
+}
+
+/* Give the completed table enough width for all 7 columns.
+   Remove the old 950px minimum so horizontal scrolling is not needed. */
+.completed-table-wrapper {
+  width: 100% !important;
+  max-height: 360px !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
+.completed-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+.completed-table th {
+  padding: 6px 5px !important;
+  font-size: 7px !important;
+  white-space: nowrap !important;
+}
+
+.completed-table td {
+  padding: 6px 5px !important;
+  font-size: 8px !important;
+  vertical-align: middle !important;
+}
+
+.table-incident {
+  max-width: none !important;
+  gap: 2px !important;
+}
+
+.table-incident-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-incident span {
+  font-size: 7px !important;
+  line-height: 1.25 !important;
+}
+
+.completed-status {
+  gap: 4px !important;
+  font-size: 7px !important;
+}
+
+.severity-badge {
+  font-size: 7px !important;
+}
+
+.view-report-button {
+  padding: 5px 8px !important;
+  font-size: 8px !important;
+}
+
+.pagination-bar {
+  min-height: 47px !important;
+  padding: 7px 10px !important;
+}
+
+.pagination-button {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.pagination-controls {
+  gap: 6px !important;
+}
+
+/* ============================================================
+   DAILY BAR GRAPH - THINNER BARS
+   ============================================================ */
+
+.vertical-bar-column {
+  max-width: 54px !important;
+}
+
+.vertical-bar-track {
+  max-width: 24px !important;
+}
+
+.vertical-bars {
+  gap: 8px !important;
+}
+
+/* Shorter screens
+   Keep both lower cards tall enough to show the complete
+   investigation form and all 10 completed investigations. */
+@media (max-height: 850px) {
+  .manual-investigation-card,
+  .completed-card {
+    height: 480px !important;
+    min-height: 480px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .completed-table-wrapper {
+    max-height: 360px !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+  }
+
+  .vertical-bar-track {
+    max-width: 22px !important;
+  }
+}
+
+@media (max-height: 760px) {
+  .manual-investigation-card,
+  .completed-card {
+    height: 480px !important;
+    min-height: 480px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .completed-table-wrapper {
+    max-height: 360px !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+  }
+
+  .vertical-bar-track {
+    max-width: 18px !important;
+  }
+}
+
+
+/* ============================================================
+   REPORT MODAL - CLEAN ORDERED LAYOUT
+   ============================================================ */
+
+.report-modal {
+  width: min(1000px, 100%);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+
+.report-modal-header {
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 22px;
+  border-bottom: 1px solid #e7edf2;
+  background: #ffffff;
+}
+
+.report-modal-header > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.report-modal-header > div > span {
+  color: #1769aa;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1.2px;
+}
+
+.report-modal-header h2 {
+  margin: 4px 0 0;
+  color: #243247;
+  font-size: 18px;
+  font-weight: 780;
+}
+
+.report-modal-header p {
+  margin: 4px 0 0;
+  color: #8793a3;
+  font-size: 9px;
+}
+
+.report-modal-content {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 22px 22px;
+  scrollbar-width: thin;
+  scrollbar-color: #b9c9d7 #f1f5f8;
+}
+
+.report-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.report-modal-content::-webkit-scrollbar-track {
+  background: #f1f5f8;
+}
+
+.report-modal-content::-webkit-scrollbar-thumb {
+  background: #b9c9d7;
+  border-radius: 8px;
+}
+
+.report-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #8fa8ba;
+}
+
+.report-detail-row {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf1f5;
+}
+
+.report-detail-row > span {
+  color: #8b96a6;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+
+.report-detail-row > strong {
+  min-width: 0;
+  color: #344155;
+  font-size: 11px;
+  font-weight: 720;
+  overflow-wrap: anywhere;
+}
+
+.report-detail-row .report-mono {
+  color: #1769aa;
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 10px;
+}
+
+.report-incident-row {
+  align-items: start;
+}
+
+.report-incident-row > strong {
+  line-height: 1.5;
+}
+
+.report-raw-output {
+  margin-top: 18px;
+}
+
+.report-raw-output > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #1769aa;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+
+.report-raw-output pre {
+  height: 420px;
+  max-height: 420px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6f8778 #22352b;
+  margin: 0;
+  padding: 14px;
+  color: #d9e6dd;
+  background: #17251e;
+  border-radius: 8px;
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 9px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+
+
+/* Keep the manual investigation header controls usable on smaller screens. */
+@media (max-width: 760px) {
+  .manual-header {
+    flex-wrap: wrap;
+  }
+
+  .manual-scroll-controls {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+}
+
+
+/* ============================================================
+   MANUAL INVESTIGATION - SCROLL FIX ONLY
+   Keeps the existing UI/buttons unchanged.
+   The body becomes the scrollable viewport so the
+   Run Investigation button and Raw Output can be reached.
+   ============================================================ */
+
+.manual-investigation-card {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.manual-investigation-card .manual-header {
+  flex: 0 0 auto !important;
+}
+
+.manual-investigation-card .manual-scroll-container {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-gutter: stable !important;
+}
+
+/* Keep the existing Output / Top buttons visible and clickable. */
+.manual-scroll-controls {
+  flex: 0 0 auto !important;
+  position: relative !important;
+  z-index: 2 !important;
 }

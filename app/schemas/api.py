@@ -1,3 +1,4 @@
+from typing import Any
 from pydantic import BaseModel, Field
 
 from app.schemas.incident import TriageResult
@@ -42,14 +43,21 @@ class InvestigationResponse(BaseModel):
 
 class InvestigationListItem(BaseModel):
     """
-    Summary of an investigation returned in the investigation list.
+    Investigation returned in the investigation list.
     """
 
     id: str
+    investigation_id: str | None = None
     incident: str | None = None
+    logs: str = ""
+    indicators: str = ""
+
     status: str
     risk_level: str | None = None
     risk_score: int | None = None
+
+    risk_assessment: dict[str, Any] | None = None
+
     created_at: str | None = None
 
 
