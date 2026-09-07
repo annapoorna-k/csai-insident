@@ -20,3 +20,21 @@ networks:
   cybersecurity-network:
     external: true
     name: cybersecurity-network
+
+frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      container_name: cybersecurity-ai-agent-frontend
+      depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - cybersecurity-network
+
+networks:
+  cybersecurity-network:
+    external: true
+    name: cybersecurity-network
+
