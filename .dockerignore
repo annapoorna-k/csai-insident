@@ -26,7 +26,6 @@ htmlcov/
 .gitignore
 
 # Frontend
-frontend/
 node_modules/
 
 # Documentation / local artifacts

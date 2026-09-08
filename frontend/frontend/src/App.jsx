@@ -1,6 +1,8 @@
 import {
   Activity,
   AlertTriangle,
+  Moon,
+  Sun,
   BookOpen,
   CheckCircle2,
   ChevronLeft,
@@ -93,6 +95,19 @@ const resources = [
 function App() {
   const [sidebarOpen, setSidebarOpen] =
     useState(true);
+  
+  
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("csai-theme") === "dark"
+  );
+
+  useEffect(() => {
+  localStorage.setItem(
+      "csai-theme",
+      darkMode ? "dark" : "light"
+    );
+  }, [darkMode]);
+
 
   const [activePage, setActivePage] =
     useState("Dashboard");
@@ -195,7 +210,11 @@ function App() {
 
 
   return (
-    <div className="app-shell">
+    <div
+      className={`app-shell ${
+        darkMode ? "theme-dark" : "theme-light"
+      }`}
+    >   
 
       {/* ======================================================
           SIDEBAR
@@ -399,6 +418,24 @@ function App() {
 
           <div className="topbar-right">
 
+            <button
+              className="theme-toggle-button"
+              onClick={() => setDarkMode((current) => !current)}
+              aria-label={
+                darkMode
+                  ? "Switch to light theme"
+                  : "Switch to dark theme"
+              }
+              title={
+                darkMode
+                  ? "Switch to light theme"
+                  : "Switch to dark theme"
+              }
+              aria-pressed={darkMode}
+            >
+              {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+            </button>
+
             {/* AVAILABLE INCIDENTS */}
 
             <button
@@ -527,23 +564,31 @@ function App() {
         <section className="page-content">
 
           {activePage ===
-          "Dashboard" ? (
+            "Dashboard" ? (
 
-            <Dashboard
-              apiStatus={
-                apiStatus
-              }
-            />
+              <Dashboard
+                apiStatus={
+                  apiStatus
+                }
+              />  
 
-          ) : (
+            ) : activePage ===
+            "Settings" ? (
 
-            <PlaceholderPage
-              title={
-                activePage
-              }
-            />
+              <SettingsPage
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
 
-          )}
+            ) : (
+
+              <PlaceholderPage
+                title={
+                  activePage
+                }
+              />
+
+            )}
 
         </section>
 
@@ -4305,6 +4350,89 @@ function GuideSection({
 /* ============================================================
    PLACEHOLDER
    ============================================================ */
+function SettingsPage({
+  darkMode,
+  setDarkMode,
+}) {
+
+  return (
+
+    <div className="dashboard-placeholder">
+
+      <div className="placeholder-icon">
+
+        <SlidersHorizontal
+          size={32}
+        />
+
+      </div>
+
+
+      <h2>
+        Appearance Settings
+      </h2>
+
+
+      <p>
+        Choose the theme for the application.
+      </p>
+
+
+      <div className="theme-settings">
+
+        <button
+          className={
+            `theme-option ${
+              !darkMode
+                ? "selected"
+                : ""
+            }`
+          }
+          onClick={() =>
+            setDarkMode(false)
+          }
+        >
+
+          <Sun
+            size={20}
+          />
+
+          <span>
+            Light Theme
+          </span>
+
+        </button>
+
+
+        <button
+          className={
+            `theme-option ${
+              darkMode
+                ? "selected"
+                : ""
+            }`
+          }
+          onClick={() =>
+            setDarkMode(true)
+          }
+        >
+
+          <Moon
+            size={20}
+          />
+
+          <span>
+            Dark Theme
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+  );
+}
+
 
 function PlaceholderPage({
   title,

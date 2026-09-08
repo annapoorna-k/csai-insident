@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS investigations (
+    id UUID PRIMARY KEY,
+    incident TEXT,
+    logs TEXT,
+    indicators TEXT,
+
+    severity VARCHAR(50),
+
+    triage_result JSONB,
+    log_analysis JSONB,
+    threat_intelligence JSONB,
+    risk_assessment JSONB,
+
+    status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

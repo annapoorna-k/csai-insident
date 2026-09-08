@@ -4412,3 +4412,477 @@ button:disabled {
   position: relative !important;
   z-index: 2 !important;
 }
+
+/* Theme Toggle Button */
+.theme-toggle-button {
+  width: 37px;
+  height: 37px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid #d5e0e9;
+  border-radius: 8px;
+  color: #536176;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.theme-toggle-button:hover {
+  color: #1769aa;
+  background: #f2f8fc;
+  border-color: #a9c8dc;
+}
+
+.theme-toggle-button:active {
+  transform: scale(0.96);
+}
+
+/* ============================================================
+   DARK THEME
+   ============================================================ */
+
+.app-shell.theme-dark,
+.app-shell.theme-dark .main-content {
+  color: #e5e7eb;
+  background: #0f141b;
+}
+
+.app-shell.theme-dark .sidebar {
+  background: #151b24;
+  border-right-color: #27313d;
+}
+
+.app-shell.theme-dark .topbar {
+  background: #0f141b;
+  border-bottom-color: #27313d;
+}
+
+.app-shell.theme-dark .dashboard-card {
+  background: #151b24;
+  border-color: #293542;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.app-shell.theme-dark .card-header,
+.app-shell.theme-dark .manual-header {
+  border-bottom-color: #293542;
+}
+
+.app-shell.theme-dark .page-header h1,
+.app-shell.theme-dark .card-header h2,
+.app-shell.theme-dark .manual-title-area h2 {
+  color: #f1f5f9;
+}
+
+.app-shell.theme-dark .page-header p,
+.app-shell.theme-dark .manual-title-area p {
+  color: #94a3b8;
+}
+
+.app-shell.theme-dark .nav-item {
+  color: #aeb9c8;
+}
+
+.app-shell.theme-dark .nav-item:hover {
+  color: #7cc4f2;
+  background: #1d2733;
+}
+
+.app-shell.theme-dark .nav-item.active {
+  color: #7cc4f2;
+  background: #1b2d3b;
+}
+
+.app-shell.theme-dark .brand {
+  border-bottom-color: #27313d;
+}
+
+.app-shell.theme-dark .sidebar-footer {
+  border-top-color: #27313d;
+}
+
+.app-shell.theme-dark .system-status {
+  background: #111821;
+  border-color: #293542;
+}
+
+.app-shell.theme-dark .system-status strong {
+  color: #dbe4ee;
+}
+
+.app-shell.theme-dark .system-status span {
+  color: #94a3b8;
+}
+
+.app-shell.theme-dark .top-text-button,
+.app-shell.theme-dark .theme-toggle-button {
+  color: #b8c4d2;
+  background: #151d27;
+  border-color: #33404e;
+}
+
+.app-shell.theme-dark .top-text-button:hover,
+.app-shell.theme-dark .theme-toggle-button:hover {
+  color: #7cc4f2;
+  background: #1d2935;
+  border-color: #466176;
+}
+
+.app-shell.theme-dark .profile-info strong {
+  color: #dbe4ee;
+}
+
+.app-shell.theme-dark .profile-info span {
+  color: #8492a3;
+}
+
+.app-shell.theme-dark .search-field,
+.app-shell.theme-dark .select-incident-button {
+  color: #aeb9c8;
+  background: #111821;
+  border-color: #33404e;
+}
+
+.app-shell.theme-dark .search-field input {
+  color: #e2e8f0;
+}
+
+.app-shell.theme-dark .selected-incident-panel,
+.app-shell.theme-dark .selection-empty {
+  background: #111821;
+  border-color: #2d3b48;
+}
+
+.app-shell.theme-dark .selected-meta {
+  border-top-color: #293542;
+}
+
+.app-shell.theme-dark .selected-meta span {
+  color: #8492a3;
+}
+
+.app-shell.theme-dark .selected-meta strong {
+  color: #cbd5e1;
+}
+
+.app-shell.theme-dark .input-panel {
+  background: #111821;
+  border-color: #2d3b48;
+}
+
+.app-shell.theme-dark .input-panel-header {
+  color: #7cc4f2;
+  background: #18232e;
+  border-bottom-color: #2d3b48;
+}
+
+.app-shell.theme-dark .input-panel-header strong {
+  color: #dbe4ee;
+}
+
+.app-shell.theme-dark .input-panel textarea {
+  color: #dbe4ee;
+  background: #111821;
+}
+
+.app-shell.theme-dark table {
+  color: #dbe4ee;
+}
+
+.app-shell.theme-dark th {
+  color: #94a3b8;
+  background: #18212b;
+  border-color: #293542;
+}
+
+.app-shell.theme-dark td {
+  color: #cbd5e1;
+  background: #151b24;
+  border-color: #293542;
+}
+
+.app-shell.theme-dark tr:hover td {
+  background: #1a2430;
+}
+
+.app-shell.theme-dark .refresh-button {
+  color: #7cc4f2;
+  background: #151d27;
+  border-color: #33404e;
+}
+
+.app-shell.theme-dark .refresh-button:hover {
+  background: #1d2935;
+  border-color: #466176;
+}
+
+/* ============================================================
+   SETTINGS THEME OPTIONS
+   ============================================================ */
+
+.theme-settings {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.theme-option {
+  min-width: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border: 1px solid #d5e0e9;
+  border-radius: 8px;
+  color: #536176;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 12px;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.theme-option:hover {
+  color: #1769aa;
+  background: #f2f8fc;
+  border-color: #a9c8dc;
+}
+
+.theme-option.selected {
+  color: #1769aa;
+  background: #edf6fc;
+  border-color: #1769aa;
+  box-shadow: 0 0 0 2px rgba(23, 105, 170, 0.08);
+}
+
+.app-shell.theme-dark .theme-option {
+  color: #b8c4d2;
+  background: #111821;
+  border-color: #33404e;
+}
+
+.app-shell.theme-dark .theme-option:hover {
+  color: #7cc4f2;
+  background: #1d2935;
+  border-color: #466176;
+}
+
+.app-shell.theme-dark .theme-option.selected {
+  color: #7cc4f2;
+  background: #172733;
+  border-color: #5b9bc2;
+}
+
+/* ============================================================
+   DARK THEME — FORCE DASHBOARD COMPONENTS
+   ============================================================ */
+
+.theme-dark .metric-card {
+  background: #111b2b !important;
+  border-color: #29384d !important;
+  box-shadow: none !important;
+}
+
+.theme-dark .metric-icon.blue {
+  color: #8bcbf5 !important;
+  background: #17324a !important;
+  border-color: #2b4b64 !important;
+}
+
+.theme-dark .metric-icon.maroon {
+  color: #e28b9a !important;
+  background: #38212a !important;
+  border-color: #58313d !important;
+}
+
+.theme-dark .card-icon {
+  color: #8bcbf5 !important;
+  background: #17324a !important;
+  border-color: #2b4b64 !important;
+}
+
+.theme-dark .metric-content > span {
+  color: #8998ad !important;
+}
+
+.theme-dark .metric-content strong {
+  color: #edf3fb !important;
+}
+
+.theme-dark .metric-content small {
+  color: #8998ad !important;
+}
+
+/* ============================================================
+   FINAL DARK THEME — DASHBOARD COMPONENTS
+   ============================================================ */
+
+/* Completed Investigations — View button */
+.app-shell.theme-dark .completed-table button,
+.app-shell.theme-dark .completed-table .view-button {
+  color: #dbeafe !important;
+  background: #1b2d3b !important;
+  border-color: #334e63 !important;
+}
+
+.app-shell.theme-dark .completed-table button:hover,
+.app-shell.theme-dark .completed-table .view-button:hover {
+  color: #ffffff !important;
+  background: #263d4f !important;
+}
+
+/* Manual Investigation — header/top */
+.app-shell.theme-dark .manual-investigation-card .manual-header {
+  background: #111821 !important;
+  border-color: #293542 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Manual Investigation — output */
+.app-shell.theme-dark .manual-investigation-card .output-panel,
+.app-shell.theme-dark .manual-investigation-card .manual-output {
+  background: #111821 !important;
+  border-color: #2d3b48 !important;
+  color: #dbe4ee !important;
+}
+
+/* Platform Health — icons */
+.app-shell.theme-dark .health-icon {
+  color: #8bcbf5 !important;
+  background: #17324a !important;
+  border-color: #2b4b64 !important;
+}
+
+.app-shell.theme-dark .health-status.online .health-icon {
+  color: #8bd5a8 !important;
+  background: #173629 !important;
+  border-color: #2d5b43 !important;
+}
+
+.app-shell.theme-dark .health-status.offline .health-icon {
+  color: #e28b9a !important;
+  background: #38212a !important;
+  border-color: #58313d !important;
+}
+
+/* Completed Investigations — bottom */
+.app-shell.theme-dark .completed-card {
+  background: #111b2b !important;
+  border-color: #29384d !important;
+}
+
+.app-shell.theme-dark .completed-table-wrapper {
+  background: #111821 !important;
+  border-color: #293542 !important;
+}
+
+.app-shell.theme-dark .completed-table {
+  background: #111821 !important;
+}
+
+.app-shell.theme-dark .completed-table td {
+  background: #111821 !important;
+  color: #cbd5e1 !important;
+}
+
+.app-shell.theme-dark .completed-table tbody tr:hover td {
+  background: #18232e !important;
+}
+
+/* Investigation Analytics — graphs */
+.app-shell.theme-dark .daily-chart-card,
+.app-shell.theme-dark .risk-chart-card {
+  background: #111b2b !important;
+  border-color: #29384d !important;
+}
+
+.app-shell.theme-dark .daily-chart-card .recharts-wrapper,
+.app-shell.theme-dark .risk-chart-card .recharts-wrapper {
+  background: transparent !important;
+}
+
+.app-shell.theme-dark .recharts-cartesian-grid line {
+  stroke: #293542 !important;
+}
+
+.app-shell.theme-dark .recharts-text {
+  fill: #94a3b8 !important;
+}
+
+/* Risk Posture — pie center */
+.app-shell.theme-dark .pie-total {
+  background: #111821 !important;
+  color: #e2e8f0 !important;
+}
+
+.app-shell.theme-dark .pie-total strong {
+  color: #f1f5f9 !important;
+}
+
+.app-shell.theme-dark .pie-total span {
+  color: #94a3b8 !important;
+}
+
+/* ============================================================
+   DARK THEME — PAGINATION & PLATFORM HEALTH
+   ============================================================ */
+
+.app-shell.theme-dark .pagination-bar {
+  background: #111821 !important;
+  border-top-color: #293542 !important;
+}
+
+.app-shell.theme-dark .pagination-info {
+  color: #8f9db2 !important;
+}
+
+.app-shell.theme-dark .pagination-button {
+  color: #aeb9c8 !important;
+  background: #18232e !important;
+  border-color: #33404e !important;
+}
+
+.app-shell.theme-dark .pagination-button:hover:not(:disabled) {
+  color: #7cc4f2 !important;
+  background: #1d2935 !important;
+  border-color: #466176 !important;
+}
+
+.app-shell.theme-dark .page-number {
+  color: #cbd5e1 !important;
+}
+
+/* Platform Health cards */
+.app-shell.theme-dark .health-row {
+  background: #111821 !important;
+  border-color: #293542 !important;
+}
+
+.app-shell.theme-dark .health-service > span {
+  color: #aeb9c8 !important;
+}
+
+/* Platform Health icons */
+.app-shell.theme-dark .health-icon {
+  color: #8bcbf5 !important;
+  background: #17324a !important;
+  border-color: #2b4b64 !important;
+}
+
+.app-shell.theme-dark .health-status.online {
+  color: #7ed3a2 !important;
+}
+
+.app-shell.theme-dark .health-status.offline {
+  color: #e28b9a !important;
+}
