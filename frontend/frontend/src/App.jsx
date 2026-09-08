@@ -31,9 +31,7 @@ import "./App.css";
    CONFIGURATION
    ============================================================ */
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "http://20.219.175.241";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
 /*
@@ -1324,6 +1322,7 @@ function Dashboard({
      ========================================================== */
 
   async function runInvestigation() {
+    setCompletedSearch("");
 
     if (
       !selectedIncident
