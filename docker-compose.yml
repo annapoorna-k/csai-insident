@@ -10,7 +10,7 @@ services:
       POSTGRES_HOST: postgres-db
       REDIS_HOST: redis-cache
       COSMOS_ENDPOINT: http://cosmos-emulator:8081
-      DATABASE_URL: postgresql://postgres:postgres@postgres-db:5432/cybersecurity_db
+      DATABASE_URL: postgresql://postgres:postgres@postgres-db:5432/cybersecuritydb
     ports:
       - "8000:8000"
     networks:
