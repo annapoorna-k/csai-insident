@@ -4886,3 +4886,342 @@ button:disabled {
 .app-shell.theme-dark .health-status.offline {
   color: #e28b9a !important;
 }
+
+/* ============================================================
+   COMPLETED INVESTIGATIONS — HEADER SEARCH
+   Search, title, completed count, and card icon stay
+   on the same horizontal row on normal desktop widths.
+   ============================================================ */
+
+.completed-card .card-header {
+  gap: 16px;
+}
+
+.completed-header-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-width: 0;
+}
+
+.completed-history-search {
+  width: 300px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0 10px;
+  flex: 0 1 300px;
+  min-width: 190px;
+  color: #8190a2;
+  background: #f8fafc;
+  border: 1px solid #dce5ec;
+  border-radius: 8px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.completed-history-search:focus-within {
+  border-color: #1769aa;
+  box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.08);
+}
+
+.completed-history-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: #344155;
+  background: transparent;
+  font-size: 10px;
+}
+
+.completed-history-search input::placeholder {
+  color: #98a3b3;
+}
+
+.completed-history-search-clear {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  color: #7e8a9a;
+  background: #e9eef3;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.completed-history-search-clear:hover {
+  color: #b44c55;
+  background: #fff0f1;
+}
+
+.completed-header-tools .record-count {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* Dark theme */
+.app-shell.theme-dark .completed-history-search {
+  color: #8bcbf5;
+  background: #111821;
+  border-color: #33404e;
+}
+
+.app-shell.theme-dark .completed-history-search:focus-within {
+  border-color: #466176;
+  box-shadow: 0 0 0 3px rgba(124, 196, 242, 0.08);
+}
+
+.app-shell.theme-dark .completed-history-search input {
+  color: #dbe4ee;
+  background: transparent;
+}
+
+.app-shell.theme-dark .completed-history-search input::placeholder {
+  color: #7f8da0;
+}
+
+.app-shell.theme-dark .completed-history-search-clear {
+  color: #aeb9c8;
+  background: #18232e;
+}
+
+.app-shell.theme-dark .completed-history-search-clear:hover {
+  color: #e28b9a;
+  background: #38212a;
+}
+
+/* Smaller desktop/tablet widths:
+   keep everything aligned while allowing the search
+   to shrink before the header needs to wrap. */
+@media (max-width: 1100px) {
+  .completed-card .card-header {
+    gap: 10px;
+  }
+
+  .completed-header-tools {
+    gap: 8px;
+  }
+
+  .completed-history-search {
+    width: 250px;
+    flex-basis: 250px;
+  }
+}
+
+/* Narrow screens:
+   the header may wrap only when there is not enough
+   horizontal space to keep the controls readable. */
+@media (max-width: 760px) {
+  .completed-card .card-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .completed-header-tools {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .completed-history-search {
+    flex: 1 1 auto;
+    width: auto;
+  }
+}
+
+/* ============================================================
+   DASHBOARD METRIC CARDS — CLICKABLE
+   ============================================================ */
+
+.metric-card-button {
+  width: 100%;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.metric-card-button:hover {
+  transform: translateY(-2px);
+  border-color: #b8cfdf;
+  box-shadow:
+    0 10px 28px
+      rgba(31, 52, 77, 0.08);
+}
+
+.metric-card-button:focus-visible {
+  outline: 2px solid #1769aa;
+  outline-offset: 2px;
+}
+
+.app-shell.theme-dark .metric-card-button:hover {
+  border-color: #405468;
+  box-shadow:
+    0 10px 28px
+      rgba(0, 0, 0, 0.24);
+}
+
+
+/* ============================================================
+   DASHBOARD METRIC INCIDENT POPUPS
+   ============================================================ */
+
+.metric-incidents-modal {
+  width: min(820px, 100%);
+}
+
+.metric-incident-list {
+  max-height: 58vh;
+  overflow-y: auto;
+  padding: 0 18px 18px;
+}
+
+.metric-incident-row {
+  position: relative;
+  width: 100%;
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 9px;
+  padding: 14px 16px;
+  border: 1px solid #e1e8ef;
+  border-radius: 10px;
+  color: #344155;
+  background: #ffffff;
+  text-align: left;
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.metric-incident-row-clickable {
+  cursor: pointer;
+}
+
+.metric-incident-row-clickable:hover {
+  border-color: #a9c8dc;
+  background: #f7fbfe;
+}
+
+.metric-incident-row:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.metric-incident-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-incident-id {
+  color: #1769aa;
+  font-family:
+    "Cascadia Code",
+    "Consolas",
+    monospace;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.metric-incident-main strong {
+  overflow: hidden;
+  color: #29364a;
+  font-size: 12px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metric-incident-main > span:last-child {
+  color: #8a96a7;
+  font-size: 9px;
+}
+
+.metric-incident-status {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.metric-incident-status.completed {
+  color: #16834d;
+  background: #eef9f2;
+  border: 1px solid #d5ebdd;
+}
+
+.metric-incident-status.incomplete {
+  color: #963b45;
+  background: #fff0f1;
+  border: 1px solid #efd3d6;
+}
+
+
+/* Dark theme */
+.app-shell.theme-dark .metric-incident-row {
+  color: #dbe4ee;
+  background: #111b2b;
+  border-color: #29384d;
+}
+
+.app-shell.theme-dark .metric-incident-row-clickable:hover {
+  background: #162434;
+  border-color: #466176;
+}
+
+.app-shell.theme-dark .metric-incident-id {
+  color: #8bcbf5;
+}
+
+.app-shell.theme-dark .metric-incident-main strong {
+  color: #dbe4ee;
+}
+
+.app-shell.theme-dark .metric-incident-main > span:last-child {
+  color: #8492a4;
+}
+
+.app-shell.theme-dark .metric-incident-status.completed {
+  color: #82d3a2;
+  background: #142a20;
+  border-color: #2c523d;
+}
+
+.app-shell.theme-dark .metric-incident-status.incomplete {
+  color: #e28b9a;
+  background: #38212a;
+  border-color: #5a3039;
+}
+
+
+/* Mobile */
+@media (max-width: 760px) {
+  .metric-incident-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .metric-incident-status {
+    align-self: flex-end;
+  }
+}

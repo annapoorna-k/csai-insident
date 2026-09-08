@@ -4,11 +4,11 @@ FROM node:24-alpine AS build
 WORKDIR /app
 
 # Install dependencies
-COPY frontend/package*.json ./
+COPY frontend/frontend/package*.json ./
 RUN npm install
 
 # Copy frontend source
-COPY frontend/ ./
+COPY frontend/frontend/ ./
 
 # Build React application
 RUN npm run build

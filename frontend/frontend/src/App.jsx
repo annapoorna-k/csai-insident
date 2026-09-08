@@ -692,6 +692,9 @@ function Dashboard({
   const analyticsRef =
     useRef(null);
 
+  const completedRef =
+    useRef(null);
+
 
   const [
     incidents,
@@ -772,8 +775,24 @@ function Dashboard({
 
 
   const [
+    completedSearch,
+    setCompletedSearch,
+  ] = useState("");
+
+
+  const [
     availableIncidentsOpen,
     setAvailableIncidentsOpen,
+  ] = useState(false);
+
+  const [
+    totalIncidentsOpen,
+    setTotalIncidentsOpen,
+  ] = useState(false);
+
+  const [
+    completedIncidentsOpen,
+    setCompletedIncidentsOpen,
   ] = useState(false);
 
 
@@ -786,6 +805,11 @@ function Dashboard({
   const [
     popupSearch,
     setPopupSearch,
+  ] = useState("");
+
+  const [
+    metricPopupSearch,
+    setMetricPopupSearch,
   ] = useState("");
 
   const [
@@ -1541,6 +1565,47 @@ function Dashboard({
     investigations;
 
 
+  const filteredCompletedIncidents =
+    useMemo(() => {
+      const query = completedSearch
+        .trim()
+        .toLowerCase();
+
+      if (!query) {
+        return completedIncidents;
+      }
+
+      return completedIncidents.filter((item) => {
+        const incidentId = String(
+          item?.incident_id ??
+          item?.incidentId ??
+          getIncidentId(item) ??
+          ""
+        ).toLowerCase();
+
+        const incidentName = String(
+          getIncidentName(item) || ""
+        ).toLowerCase();
+
+        const incidentText = String(
+          item?.incident ??
+          item?.description ??
+          item?.title ??
+          ""
+        ).toLowerCase();
+
+        return (
+          incidentId.includes(query) ||
+          incidentName.includes(query) ||
+          incidentText.includes(query)
+        );
+      });
+    }, [
+      completedIncidents,
+      completedSearch,
+    ]);
+
+
   const completedCount =
     completedIncidents.length;
 
@@ -1552,6 +1617,143 @@ function Dashboard({
 
   const otherCount =
     availableIncidents.length;
+
+  const totalIncidentPopupItems =
+    useMemo(() => {
+      const query = metricPopupSearch
+        .trim()
+        .toLowerCase();
+
+      const rows = incidents
+        .map((incident) => {
+          const completed =
+            isIncidentExecuted(
+              incident,
+              investigations
+            );
+
+          return {
+            ...incident,
+            metricStatus: completed
+              ? "COMPLETED"
+              : "INCOMPLETE",
+          };
+        })
+        .sort((a, b) => {
+          if (
+            a.metricStatus ===
+              b.metricStatus
+          ) {
+            return 0;
+          }
+
+          return a.metricStatus ===
+            "COMPLETED"
+            ? -1
+            : 1;
+        });
+
+      if (!query) {
+        return rows;
+      }
+
+      return rows.filter((item) =>
+        [
+          getIncidentId(item),
+          getIncidentName(item),
+          item.incident,
+          item.description,
+          getIncidentDate(item),
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      );
+    }, [
+      incidents,
+      investigations,
+      metricPopupSearch,
+    ]);
+
+  const completedMetricPopupItems =
+    useMemo(() => {
+      const query = metricPopupSearch
+        .trim()
+        .toLowerCase();
+
+      const rows = completedIncidents
+        .map((investigation) => {
+          const sourceIncident =
+            incidents.find(
+              (incident) =>
+                isIncidentExecuted(
+                  incident,
+                  [investigation]
+                )
+            );
+
+          return {
+            ...investigation,
+            metricIncidentId:
+              sourceIncident
+                ? getIncidentId(sourceIncident)
+                : (
+                    investigation?.incident_id ??
+                    investigation?.incidentId ??
+                    getIncidentId(investigation)
+                  ),
+            metricIncidentName:
+              sourceIncident
+                ? getIncidentName(sourceIncident)
+                : getIncidentName(investigation),
+          };
+        });
+
+      if (!query) {
+        return rows;
+      }
+
+      return rows.filter((item) =>
+        [
+          item.metricIncidentId,
+          item.metricIncidentName,
+          item.incident,
+          item.description,
+          getIncidentDate(item),
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      );
+    }, [
+      completedIncidents,
+      incidents,
+      metricPopupSearch,
+    ]);
+
+  function openCompletedInvestigationForIncident(
+    incident
+  ) {
+    const incidentName =
+      getIncidentName(incident);
+
+    setCompletedSearch(
+      incidentName || ""
+    );
+    setCompletedPage(1);
+    setTotalIncidentsOpen(false);
+    setCompletedIncidentsOpen(false);
+    setMetricPopupSearch("");
+
+    window.setTimeout(() => {
+      completedRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
+  }
 
 
   /* ==========================================================
@@ -1681,7 +1883,7 @@ function Dashboard({
   const totalCompletedPages =
     Math.max(
       Math.ceil(
-        completedIncidents.length /
+        filteredCompletedIncidents.length /
           PAGE_SIZE
       ),
       1
@@ -1715,14 +1917,14 @@ function Dashboard({
         PAGE_SIZE;
 
 
-      return completedIncidents.slice(
+      return filteredCompletedIncidents.slice(
         start,
         start +
           PAGE_SIZE
       );
 
     }, [
-      completedIncidents,
+      filteredCompletedIncidents,
       completedPage,
     ]);
 
@@ -1801,6 +2003,10 @@ function Dashboard({
             totalIncidents
           }
           description="Cosmos DB records"
+          onClick={() => {
+            setMetricPopupSearch("");
+            setTotalIncidentsOpen(true);
+          }}
         />
 
 
@@ -1811,6 +2017,10 @@ function Dashboard({
             completedCount
           }
           description="Completed investigations"
+          onClick={() => {
+            setMetricPopupSearch("");
+            setCompletedIncidentsOpen(true);
+          }}
         />
 
 
@@ -1822,6 +2032,10 @@ function Dashboard({
           }
           description="Pending / other"
           accent="maroon"
+          onClick={() => {
+            setPopupSearch("");
+            setAvailableIncidentsOpen(true);
+          }}
         />
 
       </div>
@@ -2519,21 +2733,53 @@ function Dashboard({
           COMPLETED INVESTIGATIONS
          ====================================================== */}
 
-      <section className="dashboard-card completed-card">
+      <section
+        ref={completedRef}
+        className="dashboard-card completed-card"
+      >
 
         <CardHeader
           eyebrow="INVESTIGATION HISTORY"
           title="Completed Investigations"
           icon={CheckCircle2}
           right={
-            <span className="record-count">
-              {
-                completedCount
-              }{" "}
-              completed
-            </span>
+            <div className="completed-header-tools">
+              <div className="completed-history-search">
+                <Search size={16} />
+                <input
+                  type="text"
+                  value={completedSearch}
+                  placeholder="Search completed investigations"
+                  aria-label="Search completed investigations"
+                  onChange={(event) => {
+                    setCompletedSearch(event.target.value);
+                    setCompletedPage(1);
+                  }}
+                />
+                {completedSearch && (
+                  <button
+                    type="button"
+                    className="completed-history-search-clear"
+                    aria-label="Clear completed investigation search"
+                    onClick={() => {
+                      setCompletedSearch("");
+                      setCompletedPage(1);
+                    }}
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+
+              <span className="record-count">
+                {completedSearch.trim()
+                  ? `${filteredCompletedIncidents.length} matching`
+                  : `${completedCount} completed`}
+              </span>
+            </div>
           }
         />
+
 
 
         <div className="completed-table-wrapper">
@@ -2607,7 +2853,9 @@ function Dashboard({
               ) : (
                 <tr>
                   <td colSpan="7" className="table-empty">
-                    No completed investigations found.
+                    {completedSearch.trim()
+                      ? `No completed investigations match "${completedSearch.trim()}".`
+                      : "No completed investigations found."}
                   </td>
                 </tr>
               )}
@@ -2625,20 +2873,15 @@ function Dashboard({
 
           <div className="pagination-info">
 
-            {completedCount ===
-            0
+            {filteredCompletedIncidents.length === 0
               ? "0 records"
               : `${Math.min(
-                  (completedPage -
-                    1) *
-                    PAGE_SIZE +
-                    1,
-                  completedCount
+                  (completedPage - 1) * PAGE_SIZE + 1,
+                  filteredCompletedIncidents.length
                 )}-${Math.min(
-                  completedPage *
-                    PAGE_SIZE,
-                  completedCount
-                )} of ${completedCount}`}
+                  completedPage * PAGE_SIZE,
+                  filteredCompletedIncidents.length
+                )} of ${filteredCompletedIncidents.length}`}
 
           </div>
 
@@ -2799,6 +3042,52 @@ function Dashboard({
         </div>
 
       </section>
+
+
+      {/* ======================================================
+          TOTAL INCIDENTS POPUP
+         ====================================================== */}
+
+      {totalIncidentsOpen && (
+        <MetricIncidentPopup
+          title="Total Incidents"
+          subtitle="All incidents from Azure Cosmos DB, with completed investigations shown first."
+          incidents={totalIncidentPopupItems}
+          search={metricPopupSearch}
+          setSearch={setMetricPopupSearch}
+          showStatus
+          onClose={() => {
+            setTotalIncidentsOpen(false);
+            setMetricPopupSearch("");
+          }}
+          onSelectCompleted={
+            openCompletedInvestigationForIncident
+          }
+        />
+      )}
+
+
+      {/* ======================================================
+          COMPLETED INCIDENTS POPUP
+         ====================================================== */}
+
+      {completedIncidentsOpen && (
+        <MetricIncidentPopup
+          title="Completed Incidents"
+          subtitle="Incidents with completed investigations."
+          incidents={completedMetricPopupItems}
+          search={metricPopupSearch}
+          setSearch={setMetricPopupSearch}
+          completedOnly
+          onClose={() => {
+            setCompletedIncidentsOpen(false);
+            setMetricPopupSearch("");
+          }}
+          onSelectCompleted={
+            openCompletedInvestigationForIncident
+          }
+        />
+      )}
 
 
       {/* ======================================================
@@ -3396,6 +3685,184 @@ function CaseCard({
 
 
 /* ============================================================
+   DASHBOARD METRIC INCIDENT POPUP
+   ============================================================ */
+
+function MetricIncidentPopup({
+  title,
+  subtitle,
+  incidents,
+  search,
+  setSearch,
+  onClose,
+  showStatus = false,
+  completedOnly = false,
+  onSelectCompleted,
+}) {
+  return (
+    <div
+      className="modal-overlay"
+      onMouseDown={(event) => {
+        if (
+          event.target === event.currentTarget
+        ) {
+          onClose();
+        }
+      }}
+    >
+      <div className="cases-modal metric-incidents-modal">
+        <div className="cases-modal-header">
+          <div className="cases-modal-title">
+            <div className="modal-icon">
+              <Database size={20} />
+            </div>
+
+            <div>
+              <span>DASHBOARD INCIDENTS</span>
+              <h2>{title}</h2>
+              <p>{subtitle}</p>
+            </div>
+          </div>
+
+          <button
+            className="modal-close"
+            onClick={onClose}
+            type="button"
+          >
+            <X size={19} />
+          </button>
+        </div>
+
+        <div className="cases-modal-search">
+          <Search size={17} />
+
+          <input
+            autoFocus
+            value={search}
+            onChange={(event) =>
+              setSearch(event.target.value)
+            }
+            placeholder="Search incident name or ID..."
+            aria-label={`Search ${title}`}
+          />
+
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              aria-label="Clear search"
+            >
+              <X size={15} />
+            </button>
+          )}
+        </div>
+
+        <div className="cases-modal-summary">
+          <strong>{incidents.length}</strong>
+          <span>
+            {completedOnly
+              ? "completed incidents"
+              : "incidents"}
+          </span>
+        </div>
+
+        <div className="metric-incident-list">
+          {incidents.length ? (
+            incidents.map((item, index) => {
+              const incidentId =
+                item.metricIncidentId ||
+                getIncidentId(item);
+
+              const incidentName =
+                item.metricIncidentName ||
+                getIncidentName(item);
+
+              const recordedAt =
+                formatDateTime(
+                  getIncidentDate(item)
+                );
+
+              const isCompleted =
+                item.metricStatus ===
+                  "COMPLETED" ||
+                completedOnly;
+
+              return (
+                <button
+                  key={`${incidentId}-${index}`}
+                  type="button"
+                  className={`metric-incident-row ${
+                    isCompleted
+                      ? "metric-incident-row-clickable"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (
+                      isCompleted &&
+                      onSelectCompleted
+                    ) {
+                      onSelectCompleted(item);
+                    }
+                  }}
+                  disabled={!isCompleted}
+                >
+                  <div className="metric-incident-main">
+                    <span className="metric-incident-id">
+                      {incidentId || "—"}
+                    </span>
+
+                    <strong>
+                      {incidentName ||
+                        "Security incident"}
+                    </strong>
+
+                    <span>
+                      Recorded at:{" "}
+                      {recordedAt || "—"}
+                    </span>
+                  </div>
+
+                  {showStatus && (
+                    <span
+                      className={`metric-incident-status ${
+                        isCompleted
+                          ? "completed"
+                          : "incomplete"
+                      }`}
+                    >
+                      {isCompleted
+                        ? "Completed"
+                        : "Incomplete"}
+                    </span>
+                  )}
+
+                  {completedOnly && (
+                    <span className="metric-incident-status completed">
+                      Completed
+                    </span>
+                  )}
+                </button>
+              );
+            })
+          ) : (
+            <div className="cases-empty">
+              <Search size={28} />
+              <strong>
+                No incidents found
+              </strong>
+              <span>
+                Try another search term.
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+/* ============================================================
    METRIC CARD
    ============================================================ */
 
@@ -3405,10 +3872,23 @@ function MetricCard({
   value,
   description,
   accent = "blue",
+  onClick,
 }) {
+  const CardElement = onClick
+    ? "button"
+    : "div";
+
   return (
 
-    <div className="metric-card">
+    <CardElement
+      className={`metric-card ${
+        onClick
+          ? "metric-card-button"
+          : ""
+      }`}
+      onClick={onClick}
+      type={onClick ? "button" : undefined}
+    >
 
       <div
         className={`metric-icon ${accent}`}
@@ -3437,7 +3917,7 @@ function MetricCard({
 
       </div>
 
-    </div>
+    </CardElement>
   );
 }
 
