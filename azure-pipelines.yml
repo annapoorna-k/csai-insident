@@ -112,7 +112,7 @@ stages:
 
         # IMPORTANT:
         # Frontend context = frontend folder
-        buildContext: '$(Build.SourcesDirectory)/frontend'
+        buildContext: '$(Build.SourcesDirectory)'
 
         tags: |
           $(imageTag)
