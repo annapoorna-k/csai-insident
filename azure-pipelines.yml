@@ -65,7 +65,7 @@ stages:
         echo "Frontend"
         echo "======================================"
 
-        find $(Build.SourcesDirectory)/frontend -maxdepth 3 -type f | sort
+        find $(Build.SourcesDirectory) -maxdepth 3 -type f | sort
 
       displayName: 'Check Repository Structure'
 
