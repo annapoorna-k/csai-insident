@@ -1,0 +1,23 @@
+name: Sync to Azure DevOps
+
+on:
+  push:
+    branches:
+      - 'main' # Syncs all branches
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all commits and history
+
+      - name: Push to Azure DevOps Repos
+        run: |
+          # Replace <ORG>, <PROJECT>, and <REPO> with your actual Azure DevOps details
+          AZURE_REPO_URL="https://x-access-token:${{ secrets.AZURE_DEVOPS_PAT }}@dev.azure.com/ryan1tek/cybersecurity/_git/cybersecurity"
+          
+          git remote add azure $AZURE_REPO_URL
+          git push --mirror azure
