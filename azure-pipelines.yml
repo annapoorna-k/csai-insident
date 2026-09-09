@@ -6,33 +6,56 @@ pool:
 
 variables:
 
-  # Azure
+  # ============================================================
+  # AZURE
+  # ============================================================
+
   azureServiceConnection: 'cyber-resource-connection'
   acrServiceConnection: 'acr-cyber-connection'
 
   resourceGroup: 'rg-cybersecurity-dev'
   aksCluster: 'aks-cybersecurity-dev'
 
+
+  # ============================================================
   # ACR
+  # ============================================================
+
   containerRegistry: 'cybersecurityacr7vhgp.azurecr.io'
 
-  # Backend
+
+  # ============================================================
+  # BACKEND
+  # ============================================================
+
   backendRepository: 'cybersecurity-ai-agent-backend'
   backendDockerfile: 'docker/backend.Dockerfile'
 
-  # Frontend
+
+  # ============================================================
+  # FRONTEND
+  # ============================================================
+
   frontendRepository: 'cybersecurity-ai-agent-frontend'
   frontendDockerfile: 'docker/frontend.Dockerfile'
 
-  # Image tag
+  # Frontend API URL
+  # This is NOT a secret.
+  frontendApiBaseUrl: 'http://20.219.175.241'
+
+
+  # ============================================================
+  # IMAGE TAG
+  # ============================================================
+
   imageTag: '$(Build.BuildId)'
 
-
-stages:
 
 # ============================================================
 # STAGE 1 - BUILD AND PUSH DOCKER IMAGES
 # ============================================================
+
+stages:
 
 - stage: BuildAndPush
   displayName: 'Build and Push Docker Images'
@@ -44,11 +67,13 @@ stages:
 
     steps:
 
-    # --------------------------------------------------------
-    # Check repository structure
-    # --------------------------------------------------------
+
+    # ========================================================
+    # CHECK REPOSITORY STRUCTURE
+    # ========================================================
 
     - script: |
+
         echo "======================================"
         echo "Repository"
         echo "======================================"
@@ -61,23 +86,18 @@ stages:
 
         find $(Build.SourcesDirectory) -maxdepth 4 -type f | sort
 
-        echo "======================================"
-        echo "Frontend"
-        echo "======================================"
-
-        find $(Build.SourcesDirectory) -maxdepth 3 -type f | sort
-
       displayName: 'Check Repository Structure'
 
 
-    # --------------------------------------------------------
-    # BACKEND IMAGE
-    # --------------------------------------------------------
+    # ========================================================
+    # BACKEND IMAGE - BUILD AND PUSH
+    # ========================================================
 
     - task: Docker@2
       displayName: 'Build and Push Backend Image'
 
       inputs:
+
         command: buildAndPush
 
         containerRegistry: '$(acrServiceConnection)'
@@ -86,7 +106,6 @@ stages:
 
         dockerfile: '$(backendDockerfile)'
 
-        # Backend context = repository root
         buildContext: '$(Build.SourcesDirectory)'
 
         tags: |
@@ -94,15 +113,16 @@ stages:
           latest
 
 
-    # --------------------------------------------------------
-    # FRONTEND IMAGE
-    # --------------------------------------------------------
+    # ========================================================
+    # FRONTEND IMAGE - BUILD
+    # ========================================================
 
     - task: Docker@2
-      displayName: 'Build and Push Frontend Image'
+      displayName: 'Build Frontend Image'
 
       inputs:
-        command: buildAndPush
+
+        command: build
 
         containerRegistry: '$(acrServiceConnection)'
 
@@ -110,9 +130,31 @@ stages:
 
         dockerfile: '$(frontendDockerfile)'
 
-        # IMPORTANT:
-        # Frontend context = frontend folder
         buildContext: '$(Build.SourcesDirectory)'
+
+        # IMPORTANT:
+        # Pass VITE_API_BASE_URL into Docker build
+        arguments: '--build-arg VITE_API_BASE_URL=$(frontendApiBaseUrl)'
+
+        tags: |
+          $(imageTag)
+          latest
+
+
+    # ========================================================
+    # FRONTEND IMAGE - PUSH
+    # ========================================================
+
+    - task: Docker@2
+      displayName: 'Push Frontend Image'
+
+      inputs:
+
+        command: push
+
+        containerRegistry: '$(acrServiceConnection)'
+
+        repository: '$(frontendRepository)'
 
         tags: |
           $(imageTag)
@@ -138,14 +180,16 @@ stages:
 
     steps:
 
-    # --------------------------------------------------------
+
+    # ========================================================
     # CONNECT TO AKS
-    # --------------------------------------------------------
+    # ========================================================
 
     - task: AzureCLI@2
       displayName: 'Connect to AKS'
 
       inputs:
+
         azureSubscription: '$(azureServiceConnection)'
 
         scriptType: bash
@@ -154,43 +198,63 @@ stages:
 
         inlineScript: |
 
+          echo "======================================"
+          echo "Connecting to AKS"
+          echo "======================================"
+
           az aks get-credentials \
             --resource-group $(resourceGroup) \
             --name $(aksCluster) \
             --overwrite-existing
 
+          echo "======================================"
+          echo "AKS Nodes"
+          echo "======================================"
+
           kubectl get nodes
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # UPDATE BACKEND IMAGE TAG
-    # --------------------------------------------------------
+    # ========================================================
 
     - script: |
+
+        echo "Updating Backend image tag..."
 
         sed -i \
           "s|BACKEND_IMAGE_TAG|$(imageTag)|g" \
           k8s/deployment.yaml
 
+        echo "Backend deployment image:"
+
+        grep "image:" k8s/deployment.yaml
+
       displayName: 'Update Backend Image Tag'
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # UPDATE FRONTEND IMAGE TAG
-    # --------------------------------------------------------
+    # ========================================================
 
     - script: |
+
+        echo "Updating Frontend image tag..."
 
         sed -i \
           "s|FRONTEND_IMAGE_TAG|$(imageTag)|g" \
           k8s/frontend-deployment.yaml
 
+        echo "Frontend deployment image:"
+
+        grep "image:" k8s/frontend-deployment.yaml
+
       displayName: 'Update Frontend Image Tag'
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # DEPLOY BACKEND
-    # --------------------------------------------------------
+    # ========================================================
 
     - task: AzureCLI@2
       displayName: 'Deploy Backend to AKS'
@@ -205,7 +269,9 @@ stages:
 
         inlineScript: |
 
-          echo "Deploying Backend..."
+          echo "======================================"
+          echo "Deploying Backend"
+          echo "======================================"
 
           kubectl apply -f k8s/serviceaccount.yaml
 
@@ -215,10 +281,16 @@ stages:
 
           kubectl apply -f k8s/service.yaml
 
+          echo "======================================"
+          echo "Backend Pods"
+          echo "======================================"
 
-    # --------------------------------------------------------
+          kubectl get pods
+
+
+    # ========================================================
     # DEPLOY FRONTEND
-    # --------------------------------------------------------
+    # ========================================================
 
     - task: AzureCLI@2
       displayName: 'Deploy Frontend to AKS'
@@ -233,8 +305,17 @@ stages:
 
         inlineScript: |
 
-          echo "Deploying Frontend..."
+          echo "======================================"
+          echo "Deploying Frontend"
+          echo "======================================"
 
           kubectl apply -f k8s/frontend-deployment.yaml
 
           kubectl apply -f k8s/frontend-service.yaml
+
+          echo "======================================"
+          echo "Frontend Pods"
+          echo "======================================"
+
+          kubectl get pods
+
