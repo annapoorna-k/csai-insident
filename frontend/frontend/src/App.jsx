@@ -55,7 +55,7 @@ const USER_GUIDE_URL =
   `${window.location.origin}/?page=user-guide`;
 
 
-const PAGE_SIZE = 7;
+const PAGE_SIZE = 10;
 
 
 /* ============================================================
@@ -744,6 +744,12 @@ function Dashboard({
 
 
   const [
+    runningInvestigations,
+    setRunningInvestigations,
+  ] = useState(0);
+
+
+  const [
     runResult,
     setRunResult,
   ] = useState(null);
@@ -1350,6 +1356,10 @@ function Dashboard({
       "Running"
     );
 
+    setRunningInvestigations(
+      (count) => count + 1
+    );
+
 
     const incidentId =
       getIncidentId(
@@ -1508,6 +1518,12 @@ function Dashboard({
       setRunError(
         error.message ||
           "Investigation failed."
+      );
+
+    } finally {
+
+      setRunningInvestigations(
+        (count) => Math.max(count - 1, 0)
       );
 
     }
@@ -2101,6 +2117,21 @@ function Dashboard({
 
       </section>
       </div>
+
+      {runningInvestigations > 0 && (
+        <div
+          className="running-investigations-bar"
+          role="status"
+          aria-live="polite"
+          aria-label={`${runningInvestigations} investigations running currently`}
+        >
+          <div className="running-investigations-track">
+            <span>
+              Running Investigations: {runningInvestigations} investigations running currently
+            </span>
+          </div>
+        </div>
+      )}
 
       <div
         className="dashboard-lower-grid"

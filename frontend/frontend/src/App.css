@@ -4001,8 +4001,8 @@ button:disabled {
 
 .manual-investigation-card,
 .completed-card {
-  height: 480px !important;
-  min-height: 480px !important;
+  height: 650px !important;
+  min-height: 650px !important;
   margin-bottom: 0 !important;
 }
 
@@ -4094,9 +4094,9 @@ button:disabled {
    Remove the old 950px minimum so horizontal scrolling is not needed. */
 .completed-table-wrapper {
   width: 100% !important;
-  max-height: 360px !important;
+  max-height: 530px !important;
   overflow-x: hidden !important;
-  overflow-y: hidden !important;
+  overflow-y: auto !important;
 }
 
 .completed-table {
@@ -4183,15 +4183,15 @@ button:disabled {
 @media (max-height: 850px) {
   .manual-investigation-card,
   .completed-card {
-    height: 480px !important;
-    min-height: 480px !important;
+    height: 650px !important;
+    min-height: 650px !important;
     margin-bottom: 0 !important;
   }
 
   .completed-table-wrapper {
-    max-height: 360px !important;
+    max-height: 530px !important;
     overflow-x: hidden !important;
-    overflow-y: hidden !important;
+    overflow-y: auto !important;
   }
 
   .vertical-bar-track {
@@ -4202,15 +4202,15 @@ button:disabled {
 @media (max-height: 760px) {
   .manual-investigation-card,
   .completed-card {
-    height: 480px !important;
-    min-height: 480px !important;
+    height: 650px !important;
+    min-height: 650px !important;
     margin-bottom: 0 !important;
   }
 
   .completed-table-wrapper {
-    max-height: 360px !important;
+    max-height: 530px !important;
     overflow-x: hidden !important;
-    overflow-y: hidden !important;
+    overflow-y: auto !important;
   }
 
   .vertical-bar-track {
@@ -5223,5 +5223,80 @@ button:disabled {
 
   .metric-incident-status {
     align-self: flex-end;
+  }
+}
+
+
+/* ============================================================
+   RUNNING INVESTIGATIONS — HORIZONTAL STATUS BAR
+   ============================================================ */
+.running-investigations-bar {
+  position: relative;
+  height: 24px;
+  margin: 10px 0 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #0b4f8a;
+  border-radius: 5px;
+  color: #0b4f8a;
+  background: #f5faff;
+}
+
+.running-investigations-track {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+}
+
+.running-investigations-track span {
+  display: block;
+}
+
+/* Dark-blue moving progress section */
+.running-investigations-bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 17.5%;
+  background: rgba(11, 79, 138, 0.22);
+  animation: investigationProgress 1.8s ease-in-out infinite;
+}
+
+@keyframes investigationProgress {
+  0% {
+    left: -17.5%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+.app-shell.theme-dark .running-investigations-bar {
+  color: #5fa9dc;
+  background: #132536;
+  border-color: #0b4f8a;
+}
+
+.app-shell.theme-dark .running-investigations-bar::before {
+  background: rgba(11, 79, 138, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .running-investigations-bar::before {
+    animation: none;
+    left: 0;
+    width: 100%;
   }
 }
