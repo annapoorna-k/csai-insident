@@ -45,7 +45,7 @@ variable "admin_username" {
 }
 
 variable "ssh_public_key" {
-  description = "SSH public key for the VM"
+  description = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGEvdrbNkiDBoBtnaZxdBVjythBEgNjsM+L958Sp6bAL csai"
   type        = string
 }
 
