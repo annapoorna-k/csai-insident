@@ -13,5 +13,5 @@ vm_size = "Standard_B2s"
 
 admin_username = "azureadmin"
 
-ssh_public_key = "ssh-rsa YOUR_PUBLIC_SSH_KEY_HERE"
+ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGEvdrbNkiDBoBtnaZxdBVjythBEgNjsM+L958Sp6bAL csai"
 
