@@ -1,3 +1,9 @@
+variable "subscription_id" {
+  description = "Azure subscription ID"
+  type        = string
+  sensitive   = true
+}
+
 variable "location" {
   description = "Azure region"
   type        = string
@@ -35,17 +41,18 @@ variable "key_vault_name" {
 }
 
 variable "vm_size" {
-  type    = string
-  default = "Standard_B2s"
+  description = "Azure VM size"
+  type        = string
+  default     = "Standard_B2s"
 }
 
 variable "admin_username" {
-  type    = string
-  default = "azureadmin"
+  description = "VM administrator username"
+  type        = string
+  default     = "azureadmin"
 }
 
 variable "ssh_public_key" {
-  description = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGEvdrbNkiDBoBtnaZxdBVjythBEgNjsM+L958Sp6bAL csai"
+  description = "SSH public key for the Azure VM"
   type        = string
 }
-
