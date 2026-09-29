@@ -1,3 +1,4 @@
+
 trigger:
   branches:
     include:
@@ -9,9 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  # ==========================================================
-  # CHANGE THIS TO YOUR AZURE DEVOPS SERVICE CONNECTION NAME
-  # ==========================================================
+  # Azure DevOps Service Connection
   azureServiceConnection: 'rgcsai-service-connection'
 
   # Terraform directory
@@ -38,6 +37,7 @@ stages:
 
     - checkout: self
       displayName: 'Checkout Source Code'
+
 
     # --------------------------------------------------------
     # Install Terraform
@@ -78,7 +78,6 @@ stages:
         workingDirectory: '$(terraformWorkingDirectory)'
 
         inlineScript: |
-
           set -e
 
           echo "=========================================="
@@ -93,7 +92,6 @@ stages:
     # --------------------------------------------------------
 
     - bash: |
-
         set -e
 
         cd "$(terraformWorkingDirectory)"
@@ -120,7 +118,6 @@ stages:
         workingDirectory: '$(terraformWorkingDirectory)'
 
         inlineScript: |
-
           set -e
 
           echo "=========================================="
@@ -160,7 +157,6 @@ stages:
     # --------------------------------------------------------
 
     - bash: |
-
         set -e
 
         echo "=========================================="
@@ -195,8 +191,11 @@ stages:
         workingDirectory: '$(terraformWorkingDirectory)'
 
         inlineScript: |
-
           set -e
+
+          echo "=========================================="
+          echo "Terraform Init"
+          echo "=========================================="
 
           terraform init
 
@@ -214,15 +213,36 @@ stages:
         workingDirectory: '$(terraformWorkingDirectory)'
 
         inlineScript: |
-
           set -e
 
           echo "=========================================="
           echo "Terraform Plan"
           echo "=========================================="
 
+          echo "Getting Azure subscription ID..."
+
+          AZURE_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+
+          echo "Azure subscription detected"
+
+          echo "Checking SSH public key..."
+
+          if [ -z "$SSH_PUBLIC_KEY" ]; then
+            echo "ERROR: SSH_PUBLIC_KEY pipeline variable is not configured."
+            exit 1
+          fi
+
           terraform plan \
-            -var-file="terraform.tfvars" \
+            -var="subscription_id=$AZURE_SUBSCRIPTION_ID" \
+            -var="location=Central India" \
+            -var="resource_group_name=rg-csai" \
+            -var="vm_name=csai" \
+            -var="acr_name=acrcsai" \
+            -var="aks_name=aks-csai" \
+            -var="key_vault_name=csai-keys" \
+            -var="vm_size=Standard_B2s" \
+            -var="admin_username=azureadmin" \
+            -var="ssh_public_key=$SSH_PUBLIC_KEY" \
             -out="tfplan"
 
           echo "=========================================="
@@ -267,7 +287,6 @@ stages:
     # --------------------------------------------------------
 
     - bash: |
-
         set -e
 
         echo "=========================================="
@@ -313,7 +332,6 @@ stages:
         workingDirectory: '$(terraformWorkingDirectory)'
 
         inlineScript: |
-
           set -e
 
           echo "=========================================="
@@ -336,7 +354,6 @@ stages:
         workingDirectory: '$(terraformWorkingDirectory)'
 
         inlineScript: |
-
           set -e
 
           echo "=========================================="
@@ -365,7 +382,6 @@ stages:
         workingDirectory: '$(terraformWorkingDirectory)'
 
         inlineScript: |
-
           set -e
 
           echo "=========================================="
